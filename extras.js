@@ -73,8 +73,36 @@ fc=function(){fo=F().map((_,i)=>[i,Math.random()]).sort((a,b)=>((st.miss[K(b[0])
 /* ========== ANOTAÇÕES EM CADA RESUMO ========== */
 const _resx=res;res=function(){_resx();document.querySelectorAll("#app details").forEach(d=>{const t=cur+"|"+d.querySelector("summary").textContent,ta=document.createElement("textarea");ta.placeholder="📝 Minhas anotações deste resumo";ta.value=st.notes[t]||"";ta.rows=2;ta.style.cssText="width:100%;margin-top:8px;padding:8px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font:inherit";ta.oninput=()=>{st.notes[t]=ta.value;save()};d.appendChild(ta)})};
 
-/* ========== CONTAGEM REGRESSIVA NA TELA INICIAL ========== */
-const _homex=home;home=function(){_homex();const D=xdays();app.insertAdjacentHTML("afterbegin",D>=0?`<div class="card" style="border-color:var(--ac)"><h2>⏳ Faltam ${D} dia${D==1?"":"s"}</h2><p>Prova do IBGE (Recenseador): 31/01/2027.</p><button class="btn" onclick="mxs='cd';go('mx')">Ver plano de estudos</button><button class="btn g" onclick="mxs='cr';go('mx')">Simulado cronometrado</button></div>`:`<div class="card"><p>A data da prova do IBGE (31/01/2027) já passou.</p></div>`)};
+/* ========== HOME NOVA: painel de desempenho ========== */
+st.acc=st.acc||{};st.hist=st.hist||{};
+const xacc=ok=>{const a=st.acc[cur]||(st.acc[cur]={a:0,t:0});a.t++;if(ok)a.a++;save()};
+const _pickx=pick;pick=function(i){if(ans)return;xacc(i==QQ()[qo[qi]][2]);_pickx(i)};
+const _pax=pa;pa=function(q,i,b){if(b.parentNode.dataset.d)return;xacc(i==PR[pk].q[q][3]);_pax(q,i,b)};
+const _lpx=lp;lp=function(i,b){if(b.parentNode.dataset.d)return;xacc(i==L.q[L.i][2]);_lpx(i,b)};
+const _axp=addXP;addXP=function(n){_axp(n);const t=today();st.hist[t]=(st.hist[t]||0)+n;save()};
+const xerrs=k=>st.err.filter(e=>e.startsWith(k+":")).length;
+const xmiss=k=>{const re=new RegExp("^"+KP[k]+"\\d+$");return Object.keys(st.miss).filter(i=>st.miss[i]>0&&re.test(i)).length};
+function xstudy(k){cur=k;st.cur=k;save();go("tr")}
+function xerr(k){cur=k;st.cur=k;save();tab="qz";nav();qz(true);hud();scrollTo(0,0)}
+function xfcgo(k){cur=k;st.cur=k;save();go("fc")}
+const XRADAR={ibge:"Prova em 31/01/2027.",bb:"Sem edital previsto para 2026; a tendência é 2027.",cef:"Edital previsto para 2027, depois do período eleitoral.",san:"Edital atrasado e em elaboração (notícia de ago/2026): confira se já saiu."};
+const xring=(p,l)=>`<div style="width:92px;height:92px;border-radius:50%;background:conic-gradient(var(--ac) ${p*3.6}deg,var(--bd) 0);display:grid;place-items:center;flex:none"><div style="width:70px;height:70px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-weight:700;font-size:1.2rem">${l}</div></div>`;
+function xnext(){const e=xerrs(cur),m=xmiss(cur),d=st.last==today()?st.dxp:0,ib=cur=="ibge";
+if(e)return{t:`Você tem <b>${e}</b> questões erradas em ${CONC[cur].n}. Refazer agora fixa o conteúdo.`,b:"Refazer erros",f:`xerr('${cur}')`};
+if(m)return{t:`<b>${m}</b> flashcards marcados como “Revisar” esperam por você.`,b:"Revisar cartões",f:`xfcgo('${cur}')`};
+if(d<GOAL)return{t:"Continue a trilha: cada lição tem 5 questões e rende XP.",b:"Abrir trilha",f:`xstudy('${cur}')`};
+return{t:"Meta de hoje batida! 🎉 Que tal testar o ritmo de prova?",b:"Fazer simulado",f:ib?"mxs='cr';go('mx')":"go('qz')"}}
+home=function(){const D=xdays(),W=Math.max(1,Math.ceil(D/7)),d=st.last==today()?st.dxp:0,nx=xnext();
+let ta=0,tt=0;Object.values(st.acc).forEach(a=>{ta+=a.a;tt+=a.t});const gp=tt?Math.round(ta/tt*100):0,K=Object.keys(CONC);
+const days=[...Array(7)].map((_,i)=>{const t=new Date();t.setDate(t.getDate()-(6-i));return[t.toISOString().slice(0,10),t.toLocaleDateString("pt-BR",{weekday:"narrow"})]}),mx=Math.max(GOAL,...days.map(x=>st.hist[x[0]]||0));
+const rev=K.filter(k=>xerrs(k)||xmiss(k));
+app.innerHTML=
+`<div class="card" style="border-color:var(--ac);text-align:center">${D>=0?`<div class="mu">Prova do IBGE · Recenseador · 31/01/2027</div><div style="font-size:3.4rem;font-weight:800;line-height:1.1;color:var(--ac2)">${D}</div><div>dia${D==1?"":"s"} restante${D==1?"":"s"} · ${W} semana${W==1?"":"s"}</div><button class="btn" onclick="mxs='cd';go('mx')">Plano de estudos</button><button class="btn g" onclick="mxs='cr';go('mx')">Simulado cronometrado</button>`:`<p>A prova do IBGE (31/01/2027) já passou.</p>`}</div>`+
+`<div class="card"><h3>🎯 Foco de hoje</h3><p>${nx.t}</p><button class="btn" onclick="${nx.f}">${nx.b}</button><div class="bar" style="margin-top:10px"><i style="width:${Math.min(100,d/GOAL*100)}%"></i></div><small class="mu">Meta diária: ${Math.min(d,GOAL)}/${GOAL} XP</small></div>`+
+`<div class="card"><h3>📊 Seu desempenho</h3>${tt?`<div style="display:flex;gap:14px;align-items:center">${xring(gp,gp+"%")}<div><b>${ta}</b> acertos em <b>${tt}</b> questões<br><small class="mu">Conta as questões respondidas a partir desta versão.</small></div></div>`:`<p class="mu">Responda questões (trilha, simulado ou provas) e seu percentual de acertos aparece aqui.</p>`}${K.map(k=>{const a=st.acc[k],p=a&&a.t?Math.round(a.a/a.t*100):0;return`<div style="margin-top:10px">${CONC[k].ic} ${CONC[k].n}: <b>${a&&a.t?p+"% · "+a.t+" questões":"sem questões ainda"}</b><div class="bar"><i style="width:${p}%"></i></div></div>`}).join("")}</div>`+
+`<div class="card"><h3>🔁 Revisão pendente</h3>${rev.length?rev.map(k=>`<div style="margin:8px 0"><div>${CONC[k].ic} ${CONC[k].n}</div><button class="btn" ${xerrs(k)?"":"disabled style=\"opacity:.4\""} onclick="xerr('${k}')">❌ ${xerrs(k)} erros</button><button class="btn g" ${xmiss(k)?"":"disabled style=\"opacity:.4\""} onclick="xfcgo('${k}')">🃏 ${xmiss(k)} cartões</button></div>`).join(""):`<p class="mu">Nada pendente. Erros de simulados e cartões marcados como “Revisar” aparecem aqui.</p>`}</div>`+
+`<div class="card"><h3>📅 Últimos 7 dias</h3><div style="display:flex;gap:6px;align-items:flex-end">${days.map(x=>{const v=st.hist[x[0]]||0;return`<div style="flex:1;text-align:center"><div style="height:64px;display:flex;align-items:flex-end"><i style="display:block;width:100%;height:${Math.max(4,v/mx*100)}%;background:${v>=GOAL?"var(--ok)":"var(--ac)"};border-radius:4px"></i></div><small class="mu">${x[1]}</small></div>`}).join("")}</div><small class="mu">XP por dia · verde = meta batida</small></div>`+
+`<h3 style="margin-top:18px">Meus concursos</h3>`+K.map(k=>{const s=stat(k);return`<div class="card" ${k==cur?'style="border-color:var(--ac)"':""}><div style="display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap"><b>${CONC[k].ic} ${CONC[k].n}</b>${k==cur?'<span class="tag">ativo</span>':""}</div><small class="mu">${XRADAR[k]}</small><div style="margin-top:6px">🃏 <b>${s.c}/${s.n}</b> dominados · 📝 melhor simulado <b>${s.best}/${s.tot}</b></div><div class="bar"><i style="width:${s.c/s.n*100}%"></i></div><button class="btn" onclick="xstudy('${k}')">Estudar</button></div>`}).join("")+`<p class="mu">Datas dos editais vêm de notícias: confira sempre nos sites oficiais.</p>`};
 
 /* ========== ABA "MAIS" ========== */
 let mxs="cd",X=null,tmr=null;
@@ -102,7 +130,7 @@ function xtick(){const e=document.getElementById("xt"),r=Math.max(0,X.end-Date.n
 function xq(){const q=X.q[X.i],ans=X.a.filter(v=>v!==undefined).length;
 app.innerHTML=`<div style="position:sticky;top:0;background:var(--bg);padding:6px 0;z-index:5"><b>⏱️ <span id="xt"></span></b> · Questão ${X.i+1}/${X.q.length} · Respondidas ${ans}</div><div class="card"><p><b>${q[0]}</b></p>${q[1].map((o,i)=>`<button class="opt" style="${X.a[X.i]===i?"border-color:var(--ac);background:rgba(245,138,31,.2)":""}" onclick="X.a[X.i]=${i};xq()">${"ABCDE"[i]}) ${o}</button>`).join("")}</div><button class="btn g" ${X.i?"":"disabled"} onclick="X.i--;xq()">◀</button><button class="btn" ${X.i<X.q.length-1?"":"disabled"} onclick="X.i++;xq()">▶</button><button class="btn g" onclick="if(confirm('Finalizar o simulado agora?'))xend()">Finalizar</button>`;xtick()}
 function xend(){clearInterval(tmr);const n=X.q.length;let s=0;X.q.forEach((q,i)=>{if(X.a[i]===q[2])s++});const used=Math.min(X.m,Math.round((Date.now()-(X.end-X.m*6e4))/6e4));
-st.cron.push({d:today(),s,n,m:used});addXP(s);save();
+st.cron.push({d:today(),s,n,m:used});{const a=st.acc.ibge||(st.acc.ibge={a:0,t:0});a.a+=s;a.t+=n}addXP(s);save();
 const wr=X.q.map((q,i)=>[q,i]).filter(([q,i])=>X.a[i]!==q[2]);
 app.innerHTML=`<div class="card"><h2>Resultado: ${s}/${n} (${Math.round(s/n*100)}%)</h2><p>Tempo usado: ${used} min · +${s} XP</p></div><button class="btn" onclick="go('mx')">Voltar</button><h3>Revisão (${wr.length})</h3>`+wr.map(([q,i])=>`<div class="card"><p><span class="tag">Q${i+1}</span> ${q[0]}</p><p>✅ <b>${"ABCDE"[q[2]]}) ${q[1][q[2]]}</b></p><p>${X.a[i]===undefined?"Você deixou em branco.":"❌ Você marcou "+"ABCDE"[X.a[i]]+")."} ${q[3]||""}</p></div>`).join("")}
 
