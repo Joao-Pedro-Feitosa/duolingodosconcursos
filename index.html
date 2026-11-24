@@ -234,5 +234,5 @@ function go(t){tab=t;if(t=="prv")pk=cur;nav();({home,res,fc,qz,tp,prv,tr:trilha}
 const TI={home:"🏠",tr:"🗺️",res:"📖",fc:"🃏",qz:"📝",prv:"📄",tp:"💡"};
 function nav(){$("#nav").innerHTML=`<select onchange="setC(this.value)" style="padding:8px 12px;border-radius:20px;border:1px solid var(--ac);background:var(--bg);color:var(--tx);font:inherit">${Object.keys(CONC).map(k=>`<option value="${k}" ${k==cur?"selected":""}>${CONC[k].ic} ${CONC[k].n}</option>`).join("")}</select>`;let b=document.getElementById("tabs");if(!b){b=document.createElement("div");b.id="tabs";document.body.appendChild(b)}b.innerHTML=T.map(t=>`<button class="${tab==t[0]?"on":""}" onclick="go('${t[0]}')"><span>${TI[t[0]]}</span>${t[1]}</button>`).join("")}
 go("home");
-</script><script>if("serviceWorker"in navigator){addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))}</script>
+</script><script src="extras.js"></script><script>if("serviceWorker"in navigator){addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))}</script>
 </body></html>
