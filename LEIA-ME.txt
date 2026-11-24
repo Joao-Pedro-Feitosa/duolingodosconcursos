@@ -1,0 +1,23 @@
+ROTA DA APROVAÇÃO — PWA
+
+Arquivos: index.html, manifest.webmanifest, sw.js e a pasta icons.
+Envie TODOS juntos para uma hospedagem gratuita com HTTPS.
+
+OPÇÃO A (mais simples): Netlify Drop
+1. Acesse app.netlify.com/drop
+2. Arraste esta pasta (descompactada) para a página.
+3. Copie o endereço gerado (https://...netlify.app).
+
+OPÇÃO B: GitHub Pages
+1. Crie um repositório público e envie os arquivos na raiz.
+2. Em Settings > Pages, escolha a branch main e a pasta root.
+3. O endereço será https://SEU-USUARIO.github.io/NOME-DO-REPOSITORIO/
+
+NO IPHONE
+1. Abra o endereço no Safari (precisa ser o Safari).
+2. Toque em Compartilhar > Adicionar à Tela de Início.
+3. Abra pelo ícone. Na primeira abertura com internet, o app guarda tudo e depois funciona offline.
+
+Observações
+- O progresso (XP, sequência, flashcards, erros) fica salvo no navegador do aparelho. Ele não vem da versão do claude.ai, começa do zero.
+- Para atualizar o conteúdo, envie um novo index.html e mude V="rota-v1" para "rota-v2" em sw.js.
