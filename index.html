@@ -25,9 +25,15 @@ summary{cursor:pointer;font-weight:600}details ul{margin:.5em 0 .2em;padding-lef
 .tag{display:inline-block;background:var(--ac);color:#1f1a14;border-radius:6px;padding:0 8px;font-size:.8rem;font-weight:700}
 .tip{border-left:4px solid var(--ac);padding:6px 12px;margin:8px 0;background:var(--card);border-radius:0 8px 8px 0}
 .vis{background:var(--card);border:1px dashed var(--ac);border-radius:12px;padding:12px;margin:8px 0}.row{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center;margin:4px 0}.chip{background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:6px 10px;text-align:center;font-size:.82rem;max-width:150px}.chip b{display:block;font-size:1.05rem;color:var(--ac2)}.chip.a{background:var(--ac);color:#1f1a14}.chip.a b{color:#1f1a14}.chip.g1{border-color:var(--ok);background:rgba(31,138,76,.15)}.chip.r1{border-color:var(--ko);background:rgba(192,57,43,.15)}.ar{color:var(--ac2);font-weight:700;font-size:1.2rem}.cap{text-align:center;font-size:.8rem;color:var(--mu);margin:2px 0 0}
+#nav{display:block;padding:8px 12px}#nav select{width:100%;max-width:100%}
+#tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;display:flex;background:var(--card);border-top:1px solid var(--bd);padding:4px 2px calc(4px + env(safe-area-inset-bottom,0px))}
+#tabs button{flex:1;min-width:0;border:0;background:none;color:var(--mu);font:inherit;font-size:.6rem;padding:4px 0;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+#tabs button span{font-size:1.25rem;line-height:1}#tabs button.on{color:var(--ac2);font-weight:700}
+main{padding-bottom:96px}body>div[style*="z-index:20"]{bottom:84px!important}
+@media(max-width:560px){header small{display:none}header{padding:10px 14px}.row .ar{display:none}.chip{max-width:none;flex:1 1 130px}h2{font-size:1.25rem}}
 </style><link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
 <meta name="theme-color" content="#f58a1f">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -225,6 +231,8 @@ function les(n){L={n,i:0,s:0,q:QQ().slice(n*5,n*5+5)};lq()}
 function lq(){if(L.i>=L.q.length){const s3=L.s==5?3:L.s==4?2:L.s==3?1:0,k=cur+L.n;if(s3>(st.les[k]||0))st.les[k]=s3;const b=s3==3?20:s3>0?10:0;if(b)addXP(b);save();app.innerHTML=`<div class="card"><h2>${s3?"Lição concluída!":"Quase lá"}</h2><p>${L.s}/${L.q.length} acertos · ${"⭐".repeat(s3)||"sem estrelas"} · +${b} XP de bônus</p>${s3?"":"<p class=\"mu\">Você precisa de 3 acertos para liberar a próxima lição.</p>"}</div><button class="btn" onclick="les(${L.n})">Repetir</button><button class="btn g" onclick="go('tr')">Voltar à trilha</button>`;return}const q=L.q[L.i];app.innerHTML=`<h2>Lição ${L.n+1} <span class="mu">${L.i+1}/${L.q.length}</span></h2><div class="card"><p><b>${q[0]}</b></p>${q[1].map((o,i)=>`<button class="opt" onclick="lp(${i},this)">${"ABCDE"[i]}) ${o}</button>`).join("")}<div></div></div>`}
 function lp(i,b){const p=b.parentNode;if(p.dataset.d)return;p.dataset.d=1;const q=L.q[L.i],bs=p.querySelectorAll(".opt");bs[q[2]].classList.add("ok");if(i==q[2]){L.s++;addXP(10)}else{b.classList.add("ko");const key=cur+":"+(L.n*5+L.i);if(!st.err.includes(key))st.err.push(key)}save();p.lastChild.innerHTML=`<div class="tip">${i==q[2]?"✅ ":"❌ "}${q[3]}</div><button class="btn" onclick="L.i++;lq()">Continuar</button>`}
 function go(t){tab=t;if(t=="prv")pk=cur;nav();({home,res,fc,qz,tp,prv,tr:trilha})[t]();hud();scrollTo(0,0)}
+const TI={home:"🏠",tr:"🗺️",res:"📖",fc:"🃏",qz:"📝",prv:"📄",tp:"💡"};
+function nav(){$("#nav").innerHTML=`<select onchange="setC(this.value)" style="padding:8px 12px;border-radius:20px;border:1px solid var(--ac);background:var(--bg);color:var(--tx);font:inherit">${Object.keys(CONC).map(k=>`<option value="${k}" ${k==cur?"selected":""}>${CONC[k].ic} ${CONC[k].n}</option>`).join("")}</select>`;let b=document.getElementById("tabs");if(!b){b=document.createElement("div");b.id="tabs";document.body.appendChild(b)}b.innerHTML=T.map(t=>`<button class="${tab==t[0]?"on":""}" onclick="go('${t[0]}')"><span>${TI[t[0]]}</span>${t[1]}</button>`).join("")}
 go("home");
 </script><script>if("serviceWorker"in navigator){addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))}</script>
 </body></html>
